@@ -11,15 +11,7 @@ in {
     package = mkOption {
       type = types.package;
       description = "The PowerMate controller package";
-      default = pkgs.python3.pkgs.buildPythonApplication {
-        pname = "powermate-controller";
-        version = "0.1.0";
-        format = "setuptools";
-        src = ./src;
-        propagatedBuildInputs = with pkgs.python3.pkgs; [
-          evdev
-        ];
-      };
+      default = pkgs.powermate-controller;  # This will use the package from your flake
     };
   };
 
