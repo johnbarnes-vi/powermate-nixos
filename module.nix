@@ -28,16 +28,22 @@ in {
   config = mkIf cfg.enable {
     systemd.user.services.powermate-controller = {
       description = "Griffin PowerMate Volume Controller";
-      wantedBy = [ "graphical-session.target" ];
+      wantedBy = [ "default.target" "graphical-session.target" ];
       after = [ "graphical-session.target" ];
       
       serviceConfig = {
         ExecStart = "${cfg.package}/bin/powermate_controller";
         Restart = "always";
         RestartSec = 3;
+        # Add these lines for automatic startup
+        Type = "simple";
+        RemainAfterExit = false;
       };
     };
 
+    # Also ensure the service is enabled by default
+    systemd.user.services.powermate-controller.enable = true;
+    
     services.udev.extraRules = ''
       SUBSYSTEM=="input", ATTRS{idVendor}=="077d", ATTRS{idProduct}=="0410", MODE="0666", GROUP="input"
     '';
